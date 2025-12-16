@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+/**
+ * Represents a single password entry in the vault.
+ * Contains all information needed to store and retrieve a password.
+ */
 public class PasswordEntry {
   private String id;
   private String title;
@@ -18,6 +22,9 @@ public class PasswordEntry {
   private static final DateTimeFormatter DATE_FORMATTER =
       DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
+  /**
+   * Default constructor.
+   */
   public PasswordEntry() {
     this.id = UUID.randomUUID().toString();
     this.createdAt = LocalDateTime.now();
@@ -25,6 +32,13 @@ public class PasswordEntry {
     this.category = "General";
   }
 
+  /**
+   * Constructor with basic fields.
+   *
+   * @param title password entry title
+   * @param username or email
+   * @param password the password
+   */
   public PasswordEntry(String title, String username, String password) {
     this();
     this.title = title;
@@ -32,6 +46,16 @@ public class PasswordEntry {
     this.password = password;
   }
 
+  /**
+   * Full constructor with all the fields.
+   *
+   * @param title entry title
+   * @param username / email
+   * @param password the password
+   * @param url the website URL
+   * @param notes additional information
+   * @param category entry category / type
+   */
   public PasswordEntry(String title, String username, String password, String url, String notes,
       String category) {
     this(title, username, password);
@@ -52,6 +76,11 @@ public class PasswordEntry {
     return title;
   }
 
+  /**
+   * Set title of the password entry, also updated the updatedAt timestamp.
+   *
+   * @param title set a title
+   */
   public void setTitle(String title) {
     this.title = title;
     this.updatedAt = LocalDateTime.now();
@@ -61,6 +90,11 @@ public class PasswordEntry {
     return username;
   }
 
+  /**
+   * Set the password username, update the updatedAt timestamp.
+   *
+   * @param username set a value to
+   */
   public void setUsername(String username) {
     this.username = username;
     this.updatedAt = LocalDateTime.now();
@@ -70,6 +104,11 @@ public class PasswordEntry {
     return password;
   }
 
+  /**
+   * Set password and update updatedAt timestamp.
+   *
+   * @param password being set
+   */
   public void setPassword(String password) {
     this.password = password;
     this.updatedAt = LocalDateTime.now();
@@ -79,6 +118,11 @@ public class PasswordEntry {
     return url;
   }
 
+  /**
+   * Set url and update updatedAt timestamp.
+   *
+   * @param url being set
+   */
   public void setUrl(String url) {
     this.url = url;
     this.updatedAt = LocalDateTime.now();
@@ -88,6 +132,11 @@ public class PasswordEntry {
     return notes;
   }
 
+  /**
+   * Set notes, update updatedAt timestamp.
+   *
+   * @param notes being set
+   */
   public void setNotes(String notes) {
     this.notes = notes;
     this.updatedAt = LocalDateTime.now();
@@ -97,6 +146,11 @@ public class PasswordEntry {
     return category;
   }
 
+  /**
+   * Set category, update updatedAt timestamp.
+   *
+   * @param category being set
+   */
   public void setCategory(String category) {
     this.category = category;
     this.updatedAt = LocalDateTime.now();
@@ -122,6 +176,11 @@ public class PasswordEntry {
     return DATE_FORMATTER;
   }
 
+  /**
+   * Gets the display name for this entry.
+   *
+   * @return display name
+   */
   public String getDisplayName() {
     if (title != null && !title.isEmpty()) {
       return title;
@@ -130,6 +189,13 @@ public class PasswordEntry {
     }
   }
 
+  /**
+   * Checks if this entry matches the search text.
+   * Searches in title, username, URL, and notes.
+   *
+   * @param searchText text to search for
+   * @return true if any field contains the search text
+   */
   public boolean matchesSearch(String searchText) {
     if (searchText == null || searchText.trim().isEmpty()) {
       return true;
@@ -145,7 +211,7 @@ public class PasswordEntry {
   @Override
   public String toString() {
     String displayUsername;
-    if(username != null) {
+    if (username != null) {
       displayUsername = username;
     } else {
       displayUsername = "no username";
