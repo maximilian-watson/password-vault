@@ -28,6 +28,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'
         cache: maven
         
     - name: Run tests
@@ -43,6 +44,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'
         cache: maven
         
     - name: Generate coverage
@@ -58,6 +60,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'
         cache: maven
         
     - name: Run CheckStyle
@@ -73,6 +76,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'
         cache: maven
       
     - name: Run SpotBugs
