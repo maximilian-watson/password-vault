@@ -12,7 +12,7 @@ public class PasswordEntry {
   private String id;
   private String title;
   private String username;
-  private String password;
+  private char[] password;
   private String url;
   private String notes;
   private String category;
@@ -39,7 +39,7 @@ public class PasswordEntry {
    * @param username or email
    * @param password the password
    */
-  public PasswordEntry(String title, String username, String password) {
+  public PasswordEntry(String title, String username, char[] password) {
     this();
     this.title = title;
     this.username = username;
@@ -56,7 +56,7 @@ public class PasswordEntry {
    * @param notes additional information
    * @param category entry category / type
    */
-  public PasswordEntry(String title, String username, String password, String url, String notes,
+  public PasswordEntry(String title, String username, char[] password, String url, String notes,
       String category) {
     this(title, username, password);
     this.url = url;
@@ -100,7 +100,7 @@ public class PasswordEntry {
     this.updatedAt = LocalDateTime.now();
   }
 
-  public String getPassword() {
+  public char[] getPassword() {
     return password;
   }
 
@@ -109,7 +109,7 @@ public class PasswordEntry {
    *
    * @param password being set
    */
-  public void setPassword(String password) {
+  public void setPassword(char[] password) {
     this.password = password;
     this.updatedAt = LocalDateTime.now();
   }
@@ -156,12 +156,20 @@ public class PasswordEntry {
     this.updatedAt = LocalDateTime.now();
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
   public String getCreatedAtFormatted() {
     return createdAt.format(DATE_FORMATTER);
   }
 
   public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
   }
 
   public String getUpdatedAtFormatted() {
@@ -182,7 +190,7 @@ public class PasswordEntry {
    * @return display name
    */
   public String getDisplayName() {
-    if (title != null && !title.isEmpty()) {
+    if (title != null && !title.trim().isEmpty()) {
       return title;
     } else {
       return "Untitled Entry";
