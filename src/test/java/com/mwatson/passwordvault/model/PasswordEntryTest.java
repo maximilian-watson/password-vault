@@ -188,7 +188,6 @@ public class PasswordEntryTest {
     String formatted = entry.getUpdatedAtFormatted();
     assertNotNull(formatted);
     assertTrue(formatted.matches("\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}:\\d{2}"));
-    LocalDateTime before = entry.getUpdatedAt();
     Thread.sleep(1100);
     entry.setTitle("Updated");
     String newFormatted = entry.getUpdatedAtFormatted();
@@ -202,7 +201,6 @@ public class PasswordEntryTest {
   @Test
   public void testSetId() {
     // Test 15
-    String id = entry.getId();
     entry.setId("123");
     assertEquals("123", entry.getId());
     entry.setId(null);

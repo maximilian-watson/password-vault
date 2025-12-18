@@ -5,14 +5,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Arrays;
-import java.util.Base64;
+
+
 
 /**
  * Service for encrypting and decrypting sensitive data using AES-GCM.
@@ -29,6 +31,9 @@ public class EncryptionService {
 
   private final SecureRandom secureRandom;
 
+  /**
+   * Constructor that createes a new EncryptionService.
+   */
   public EncryptionService() {
     this.secureRandom = new SecureRandom();
   }
@@ -63,12 +68,20 @@ public class EncryptionService {
     }
   }
 
+  /**
+   * Decrypts AES-GCM encrypted data.
+   *
+   * @param encryptedDataWithIv encrypted data with IV added
+   * @param password the password for key derivation
+   * @param salt the salt for key derivation
+   * @return decrypted plaintext
+   */
   public String decrypt(byte[] encryptedDataWithIv, char[] password, byte[] salt) {
-    if(encryptedDataWithIv == null || password == null || salt == null) {
+    if (encryptedDataWithIv == null || password == null || salt == null) {
       throw new IllegalArgumentException("Encrypted Data, password, salt can't be null");
     }
     
-    if(encryptedDataWithIv.length < GCM_IV_LENGTH) {
+    if (encryptedDataWithIv.length < GCM_IV_LENGTH) {
       throw new IllegalArgumentException("Encrypted data is too short to contain IV");
     }
     
@@ -94,6 +107,13 @@ public class EncryptionService {
     }
   }
 
+  /**
+   * Derives an AES key from a password and salt using PBKDF2.
+   *
+   * @param password the password
+   * @param salt the salt
+   * @return derived AES key
+   */
   private SecretKey deriveKey(char[] password, byte[] salt) {
     try {
       SecretKeyFactory factory = SecretKeyFactory.getInstance(KEY_DERIVATION_ALGORITHM);
@@ -106,35 +126,75 @@ public class EncryptionService {
     }
   }
 
+  /**
+   * Generates a random salt for key derivation.
+   *
+   * @return generated salt
+   */
   public byte[] generateSalt() {
     byte[] salt = new byte[16];
     secureRandom.nextBytes(salt);
     return salt;
   }
 
+  /**
+   * Encrypts data and eoncodes the result as Base 64.
+   *
+   * @param data plaintext data
+   * @param password for encryption
+   * @param salt for key derivation
+   * @return Base64 encoded encrypted data
+   */
   public String encryptToBase64(String data, char[] password, byte[] salt) {
     byte[] encrypted = encrypt(data, password, salt);
     return Base64.getEncoder().encodeToString(encrypted);
   }
 
+  /**
+   * Decrypts Base64 encoded encrypted data.
+   *
+   * @param base64Data Base64 encrypted data
+   * @param password for decryption
+   * @param salt for key derivation
+   * @return decrypted plaintext
+   */
   public String decryptFromBase64(String base64Data, char[] password, byte[] salt) {
     byte[] encryptedData = Base64.getDecoder().decode(base64Data);
     return decrypt(encryptedData, password, salt);
   }
 
+  /**
+   * Clears a password from memory.
+   *
+   * @param password to clear
+   */
   public void clearPassword(char[] password) {
     if (password != null) {
       Arrays.fill(password, '\0');
     }
   }
 
+  /**
+   * Runtime exception for encryption related failures.
+   */
   public static class EncryptionException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructs new encryption exception with specified message and cause.
+     *
+     * @param message detailed message explaining the encryption failure
+     * @param cause the underlying cause of the exception
+     */
     public EncryptionException(String message, Throwable cause) {
       super(message, cause);
     }
 
+    /**
+     * Constructs a new encryption exception with specified detail message.
+     *
+     * @param message explaining the encryption failure
+     */
     public EncryptionException(String message) {
       super(message);
     }
