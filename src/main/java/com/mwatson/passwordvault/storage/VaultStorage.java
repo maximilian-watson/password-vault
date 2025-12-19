@@ -112,4 +112,23 @@ public class VaultStorage {
   public boolean vaultFileExists() {
     return Files.exists(vaultFilePath);
   }
+
+  /**
+   * Delete the vault file.
+   *
+   * @throws IOException if there is an error deleting, calling program has to deal with it
+   */
+  public void deleteVaultFile() throws IOException {
+    Files.deleteIfExists(vaultFilePath);
+  }
+
+  /**
+   * Getter for vaultFilePath.
+   *
+   * @return the vaultFilePath as a String
+   */
+  public String getVaultFilePath() {
+    return vaultFilePath.toString();
+  }
+
 }
