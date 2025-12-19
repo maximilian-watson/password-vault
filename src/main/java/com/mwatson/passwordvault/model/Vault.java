@@ -1,5 +1,6 @@
 package com.mwatson.passwordvault.model;
 
+import com.google.gson.annotations.SerializedName;
 import com.mwatson.passwordvault.crypto.EncryptionService;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,11 +12,14 @@ import java.util.UUID;
  * Manages the collection and provides search and filter functionality.
  */
 public class Vault {
+  @SerializedName("id")
   private String id;
+  @SerializedName("name")
   private String name;
+  @SerializedName("entries")
   private List<PasswordEntry> entries;
-  private byte[] salt;
-  private final EncryptionService encryptionService;
+  private transient byte[] salt;
+  private final transient EncryptionService encryptionService;
 
 
   /**

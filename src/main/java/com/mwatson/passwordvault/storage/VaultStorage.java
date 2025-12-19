@@ -17,7 +17,10 @@ import java.util.Base64;
  */
 public class VaultStorage {
   private static final String VAULT_FILE_NAME = "password-vault.dat";
+
+
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 
   private final EncryptionService encryptionService;
   private final Path vaultFilePath;
@@ -96,7 +99,13 @@ public class VaultStorage {
       String json = encryptionService.decryptFromBase64(encryptedVault.getEncryptedDataBase64(),
           masterPassword, salt);
       // Parse vault
-      return GSON.fromJson(json, Vault.class);
+      Vault vault = GSON.fromJson(json, Vault.class); // Store in variable
+
+      // Set the salt (since it's transient and won't be in JSON)
+      vault.setSalt(salt);
+
+      return vault; // Return the vault with salt set
+
     } catch (Exception e) {
       throw new IOException("Failed to load vault: " + e.getMessage(), e);
     } finally {

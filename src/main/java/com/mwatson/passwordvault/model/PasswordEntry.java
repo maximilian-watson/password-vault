@@ -12,14 +12,14 @@ public class PasswordEntry {
   private String id;
   private String title;
   private String username;
-  private char[] password;
+  private transient char[] password;
   private String url;
   private String notes;
   private String category;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private transient LocalDateTime createdAt;
+  private transient LocalDateTime updatedAt;
 
-  private static final DateTimeFormatter DATE_FORMATTER =
+  private static final transient DateTimeFormatter DATE_FORMATTER =
       DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
   /**
