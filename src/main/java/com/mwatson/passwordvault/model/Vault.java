@@ -1,5 +1,6 @@
 package com.mwatson.passwordvault.model;
 
+import com.mwatson.passwordvault.crypto.EncryptionService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,8 @@ public class Vault {
   private String name;
   private List<PasswordEntry> entries;
   private byte[] salt;
+  private final EncryptionService encryptionService;
+
 
   /**
    * Creates new empty vault with random salt.
@@ -22,7 +25,8 @@ public class Vault {
     this.id = UUID.randomUUID().toString();
     this.name = "My Password Vault";
     this.entries = new ArrayList<>();
-    this.salt = generateSalt();
+    this.encryptionService = new EncryptionService();
+    this.salt = encryptionService.generateSalt();
   }
 
   /**
@@ -32,6 +36,7 @@ public class Vault {
     this.id = id;
     this.name = name;
     this.entries = new ArrayList<>(entries);
+    this.encryptionService = new EncryptionService();
     this.salt = salt;
   }
 
@@ -197,16 +202,5 @@ public class Vault {
    */
   public void setSalt(byte[] salt) {
     this.salt = salt.clone();
-  }
-
-  /**
-   * Private method to generate salt.
-   *
-   * @return the generated salt
-   */
-  private byte[] generateSalt() {
-    byte[] salt = new byte[16];
-    new java.security.SecureRandom().nextBytes(salt);
-    return salt;
   }
 }
