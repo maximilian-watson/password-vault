@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
 /**
  * Represents the entire password vault containing multiple password entries.
  * Manages the collection and provides search and filter functionality.
@@ -50,8 +51,8 @@ public class Vault {
    * @return true if successfully removed, false if not
    */
   public boolean removeEntry(String entryId) {
-    for(int i = 0; i < entries.size(); i++) {
-      if(entries.get(i).getId().equals(entryId)) {
+    for (int i = 0; i < entries.size(); i++) {
+      if (entries.get(i).getId().equals(entryId)) {
         entries.remove(i);
         return true;
       }
@@ -174,7 +175,7 @@ public class Vault {
   /**
    * Set vault name.
    *
-   * @param new vault of vault
+   * @param name new name of vault
    */
   public void setName(String name) {
     this.name = name;
