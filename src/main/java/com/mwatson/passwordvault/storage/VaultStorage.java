@@ -2,6 +2,7 @@ package com.mwatson.passwordvault.storage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.mwatson.passwordvault.crypto.EncryptionService;
 import com.mwatson.passwordvault.model.Vault;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -19,7 +21,7 @@ public class VaultStorage {
   private static final String VAULT_FILE_NAME = "password-vault.dat";
 
 
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+  private static final Gson GSON = new GsonBuilder().create();
 
 
   private final EncryptionService encryptionService;
@@ -57,17 +59,19 @@ public class VaultStorage {
     }
     try {
       // Convert to JSON
-      String json = GSON.toJson(vault);
+      Gson gson = new Gson();
+      String vaultJson = gson.toJson(vault);
       // Get salt from vault
       byte[] salt = vault.getSalt();
       // Encrypt
-      String encryptedBase64 = encryptionService.encryptToBase64(json, masterPassword, salt);
-      // Create wrapper with the salt
-      EncryptedVault encryptedVault =
-          new EncryptedVault(Base64.getEncoder().encodeToString(salt), encryptedBase64);
-      // Save to file
-      String fileContent = GSON.toJson(encryptedVault);
-      Files.write(vaultFilePath, fileContent.getBytes(StandardCharsets.UTF_8));
+      EncryptionService encryptionService = new EncryptionService();
+      byte[] encrypted = encryptionService.encrypt(vaultJson, masterPassword, salt);
+
+      String encryptedBase64 = Base64.getEncoder().encodeToString(encrypted);
+      String saltBase64 = Base64.getEncoder().encodeToString(salt);
+      String jsonContent = String.format("{\"saltBase64\":\"%s\",\"encryptedDataBase64\":\"%s\"}",
+          saltBase64, encryptedBase64);
+      Files.write(vaultFilePath, jsonContent.getBytes(StandardCharsets.UTF_8));
     } finally {
       encryptionService.clearPassword(masterPassword);
     }
@@ -88,23 +92,28 @@ public class VaultStorage {
     if (!vaultFileExists()) {
       return null;
     }
+
     try {
       // Read file
       String fileContent = new String(Files.readAllBytes(vaultFilePath), StandardCharsets.UTF_8);
       // Parse encrypted vault wrapper
-      EncryptedVault encryptedVault = GSON.fromJson(fileContent, EncryptedVault.class);
-      // Decode the salt
-      byte[] salt = Base64.getDecoder().decode(encryptedVault.getSaltBase64());
-      // decrypt the data
-      String json = encryptionService.decryptFromBase64(encryptedVault.getEncryptedDataBase64(),
-          masterPassword, salt);
-      // Parse vault
-      Vault vault = GSON.fromJson(json, Vault.class); // Store in variable
 
-      // Set the salt (since it's transient and won't be in JSON)
-      vault.setSalt(salt);
+      Gson gson = new Gson();
+      JsonObject json = gson.fromJson(fileContent, JsonObject.class);
 
-      return vault; // Return the vault with salt set
+      String readSaltBase64 = json.get("saltBase64").getAsString();
+      String readEncryptedBase64 = json.get("encryptedDataBase64").getAsString();
+
+      byte[] readSalt = Base64.getDecoder().decode(readSaltBase64);
+      byte[] readEncryptedData = Base64.getDecoder().decode(readEncryptedBase64);
+
+      String decryptedJson =
+          encryptionService.decrypt(readEncryptedData, masterPassword, readSalt);
+      Vault decryptedVault = gson.fromJson(decryptedJson, Vault.class);
+
+      decryptedVault.setSalt(readSalt);
+
+      return decryptedVault;
 
     } catch (Exception e) {
       throw new IOException("Failed to load vault: " + e.getMessage(), e);
