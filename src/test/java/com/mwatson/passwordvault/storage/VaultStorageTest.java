@@ -22,203 +22,9 @@ import java.security.SecureRandom;
 
 
 public class VaultStorageTest {
-
-  /*
-  @Test
-  public void testActualFileEncryption() throws Exception {
-    System.out.println("=== TEST WITH ACTUAL FILE ===");
-
-    // 1. Create a test file in current directory
-    File testFile = new File("test_encryption_debug.vault");
-
-    // 2. Simple test data
-    String testData = "Hello World!";
-    char[] password = "password123".toCharArray();
-    byte[] salt = new byte[16];
-    new SecureRandom().nextBytes(salt);
-
-    System.out.println("Test data: '" + testData + "'");
-    System.out.println("Password: " + new String(password));
-    System.out.println("Salt (hex): " + bytesToHex(salt));
-
-    // 3. Encrypt
-    EncryptionService encryptionService = new EncryptionService();
-    byte[] encryptedWithIv = encryptionService.encrypt(testData, password, salt);
-
-    System.out.println("\nEncrypted result:");
-    System.out.println("Total bytes: " + encryptedWithIv.length);
-
-    // Check IV (first 12 bytes)
-    byte[] ivFromEncryption = new byte[12];
-    System.arraycopy(encryptedWithIv, 0, ivFromEncryption, 0, 12);
-    System.out.println("IV (first 12 bytes): " + bytesToHex(ivFromEncryption));
-
-    // 4. Save to actual file (like your real code does)
-    String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedWithIv);
-    String saltBase64 = Base64.getEncoder().encodeToString(salt);
-
-    String jsonContent = String.format("{\"saltBase64\":\"%s\",\"encryptedDataBase64\":\"%s\"}",
-        saltBase64, encryptedBase64);
-
-    Files.write(testFile.toPath(), jsonContent.getBytes(StandardCharsets.UTF_8));
-    System.out.println("\nSaved to file: " + testFile.getAbsolutePath());
-      System.out.println("File size: " + testFile.length() + " bytes");
-
-    // 5. Read back from actual file
-    System.out.println("\n=== READING BACK FROM FILE ===");
-    String fileContent = new String(Files.readAllBytes(testFile.toPath()), StandardCharsets.UTF_8);
-      System.out.println("File content: " + fileContent);
-
-    // Parse JSON
-    Gson gson = new Gson();
-    JsonObject json = gson.fromJson(fileContent, JsonObject.class);
-
-    String readSaltBase64 = json.get("saltBase64").getAsString();
-    String readEncryptedBase64 = json.get("encryptedDataBase64").getAsString();
-
-    byte[] readSalt = Base64.getDecoder().decode(readSaltBase64);
-    byte[] readEncryptedData = Base64.getDecoder().decode(readEncryptedBase64);
-
-    System.out.println("\nRead from file:");
-    System.out.println("Salt matches original: " + Arrays.equals(salt, readSalt));
-    System.out.println("Encrypted data length: " + readEncryptedData.length + " bytes");
-
-    // Extract IV from what we read
-    byte[] ivFromFile = new byte[12];
-    System.arraycopy(readEncryptedData, 0, ivFromFile, 0, 12);
-    System.out.println("IV from file (first 12 bytes): " + bytesToHex(ivFromFile));
-    System.out.println("IV matches original: " + Arrays.equals(ivFromEncryption, ivFromFile));
-
-    // 6. Try to decrypt
-    System.out.println("\n=== ATTEMPTING DECRYPTION ===");
-    try {
-      String decrypted = encryptionService.decrypt(readEncryptedData, password, readSalt);
-      System.out.println("Decryption SUCCESS!");
-      System.out.println("Result: '" + decrypted + "'");
-      System.out.println("Matches original: " + testData.equals(decrypted));
-    } catch (Exception e) {
-      System.out.println("Decryption FAILED!");
-      System.out.println("Error: " + e.getClass().getSimpleName());
-      System.out.println("Message: " + e.getMessage());
-      e.printStackTrace();
-      }
-
-    // 7. Clean up
-    testFile.delete();
-    System.out.println("\nCleaned up test file.");
-  }
-  */
-  
-  /*
-  @Test
-  public void testVaultObjectEncryption() throws Exception {
-    System.out.println("=== TEST VAULT OBJECT ENCRYPTION ===");
-
-    // 1. Create a test file in current directory
-    File testFile = new File("test_vault_encryption.vault");
-
-    // 2. Create a vault object
-    Vault vault = new Vault();
-    vault.setName("My Test Vault");
-    vault.addEntry(new PasswordEntry("google.com", "test@gmail.com", "mypassword".toCharArray()));
-    vault.addEntry(new PasswordEntry("github.com", "devuser", "githubpass".toCharArray()));
-
-    System.out.println("Vault created:");
-    System.out.println("  Name: " + vault.getName());
-    System.out.println("  ID: " + vault.getId());
-    System.out.println("  Salt Base64: " + Base64.getEncoder().encodeToString(vault.getSalt()));
-    System.out.println("  Entries: " + vault.getEntryCount());
-
-    Gson gson = new Gson();
-    String vaultJson = gson.toJson(vault);
-    System.out.println("\nVault JSON length: " + vaultJson.length() + " characters");
-    System.out.println("Vault JSON (first 200 chars): "
-        + vaultJson.substring(0, Math.min(200, vaultJson.length())));
-
-    char[] password = "password123".toCharArray();
-    byte[] salt = vault.getSalt();
-
-    EncryptionService encryptionService = new EncryptionService();
-    byte[] encryptedWithIv = encryptionService.encrypt(vaultJson, password, salt);
-
-    System.out.println("\nEncrypted result:");
-    System.out.println("Total bytes: " + encryptedWithIv.length);
-
-    byte[] ivFromEncryption = new byte[12];
-    System.arraycopy(encryptedWithIv, 0, ivFromEncryption, 0, 12);
-    System.out.println("IV (first 12 bytes): " + bytesToHex(ivFromEncryption));
-
-    String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedWithIv);
-    String saltBase64 = Base64.getEncoder().encodeToString(salt);
-    String jsonContent = String.format("{\"saltBase64\":\"%s\",\"encryptedDataBase64\":\"%s\"}",
-        saltBase64, encryptedBase64);
-
-    Files.write(testFile.toPath(), jsonContent.getBytes(StandardCharsets.UTF_8));
-    System.out.println("\nSaved to file: " + testFile.getAbsolutePath());
-    System.out.println("File size: " + testFile.length() + " bytes");
-
-    System.out.println("\n=== READING BACK FROM FILE ===");
-    String fileContent = new String(Files.readAllBytes(testFile.toPath()), StandardCharsets.UTF_8);
-    System.out.println("File content: " + fileContent);
-
-    JsonObject json = gson.fromJson(fileContent, JsonObject.class);
-
-    String readSaltBase64 = json.get("saltBase64").getAsString();
-    String readEncryptedBase64 = json.get("encryptedDataBase64").getAsString();
-
-    byte[] readSalt = Base64.getDecoder().decode(readSaltBase64);
-    byte[] readEncryptedData = Base64.getDecoder().decode(readEncryptedBase64);
-
-    System.out.println("\nRead from file:");
-    System.out.println("Salt matches original: " + Arrays.equals(salt, readSalt));
-    System.out.println("Encrypted data length: " + readEncryptedData.length + " bytes");
-
-    byte[] ivFromFile = new byte[12];
-    System.arraycopy(readEncryptedData, 0, ivFromFile, 0, 12);
-    System.out.println("IV from file (first 12 bytes): " + bytesToHex(ivFromFile));
-    System.out.println("IV matches original: " + Arrays.equals(ivFromEncryption, ivFromFile));
-
-    System.out.println("\n=== ATTEMPTING DECRYPTION ===");
-    try {
-      String decryptedJson = encryptionService.decrypt(readEncryptedData, password, readSalt);
-      System.out.println("Decryption SUCCESS!");
-      System.out.println("Decrypted JSON length: " + decryptedJson.length() + " characters");
-      System.out.println("Decrypted JSON (first 200 chars): "
-          + decryptedJson.substring(0, Math.min(200, decryptedJson.length())));
-
-      Vault decryptedVault = gson.fromJson(decryptedJson, Vault.class);
-      System.out.println("\nParsed Vault:");
-      System.out.println("  Name: " + decryptedVault.getName());
-      System.out.println("  ID: " + decryptedVault.getId());
-      System.out.println("  Entries: " + decryptedVault.getEntryCount());
-
-      decryptedVault.setSalt(readSalt);
-      System.out.println("  Set salt from file to vault");
-
-      // Verify the vault matches
-      System.out.println("\nVerification:");
-      System.out.println("  Name matches: " + vault.getName().equals(decryptedVault.getName()));
-      System.out.println("  ID matches: " + vault.getId().equals(decryptedVault.getId()));
-      System.out.println(
-          "  Entry count matches: " + (vault.getEntryCount() == decryptedVault.getEntryCount()));
-
-    } catch (Exception e) {
-      System.out.println("Decryption FAILED!");
-      System.out.println("Error: " + e.getClass().getSimpleName());
-      System.out.println("Message: " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    // 8. Clean up
-    testFile.delete();
-    System.out.println("\nCleaned up test file.");
-
-  }
-  */
-
-
   @Test
   public void testVaultStorageWorkflow() throws Exception {
+    // Test 1
     // Testing overall workflow of Vault Storage
     // Create test file
     String testFileName = "test_vaultstorage_real.dat";
@@ -228,8 +34,9 @@ public class VaultStorageTest {
       testFile.delete();
     }
 
+    VaultStorage storage = null;
     try {
-      VaultStorage storage = new VaultStorage(testFileName);
+      storage = new VaultStorage(testFileName);
 
       // Add new vault with password entry items
       Vault vault = new Vault();
@@ -292,9 +99,65 @@ public class VaultStorageTest {
       }
     } finally {
       // Delete test file
-      if (testFile.exists()) {
-        testFile.delete();
-      }
+      storage.deleteVaultFile();
     }
+  }
+  
+  @Test
+  public void testEmptyConstructor() {
+    // Test 2
+    // Testing the VaultStorage empty constructor, test the path used is right
+    VaultStorage storage = new VaultStorage();
+    assertNotNull(storage);
+    String expectedPath = System.getProperty("user.home") + "/password-vault.dat";
+    assertEquals(expectedPath, storage.getVaultFilePath());
+    // Delete file
+    new File(expectedPath).delete();
+  }
+
+  @Test
+  public void testSaveVaultThrowsNullVault() {
+    // Test 3
+    // Test the missing branch if vault passed in is null
+    // Check error message too
+    VaultStorage storage = new VaultStorage("test_vault_storage");
+    char[] password = "test".toCharArray();
+    IllegalArgumentException e =
+        assertThrows(IllegalArgumentException.class, () -> storage.saveVault(null, password));
+    assertTrue(e.getMessage() == "Vault and Password cannot be null");
+    assertFalse(new File("test_vault_storage").exists());
+  }
+
+  @Test
+  public void testSaveVaultThrowsNullPassword() {
+    // Test 4
+    // Test the missing branch if password is null, checking error message too
+    VaultStorage storage = new VaultStorage("test_vault_storage");
+    Vault vault = new Vault();
+    IllegalArgumentException e =
+        assertThrows(IllegalArgumentException.class, () -> storage.saveVault(vault, null));
+    assertTrue(e.getMessage() == "Vault and Password cannot be null");
+    assertFalse(new File("test_vault_storage").exists());
+  }
+
+  @Test
+  public void testLoadVaultThrowsNullPassword() {
+    // Test 5
+    // Test missing branch in load vault when the master password is null exception is thrown
+    VaultStorage storage = new VaultStorage("test_vault_storage");
+    IllegalArgumentException e =
+        assertThrows(IllegalArgumentException.class, () -> storage.loadVault(null));
+    assertTrue(e.getMessage() == "Master password cannot be null");
+  }
+
+  @Test
+  public void testLoadVaultThrowsMissingFile() throws IOException {
+    // Test 6
+    // Testing the missing branch in load vault when file doesn't exist
+    VaultStorage storage = new VaultStorage("test_vault_storage");
+    assertFalse(new File("test_vault_storage").exists());
+    Vault result = storage.loadVault("test_password".toCharArray());
+    // Returned vault is null when file doesn't exist
+    assertNull(result);
   }
 }
