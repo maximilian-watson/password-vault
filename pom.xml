@@ -148,6 +148,7 @@
         <configuration>
           <excludes>
             <exclude>**/Main*</exclude>
+            <exclude>**/gui/**</exclude>
           </excludes>
         </configuration>
         <executions>
