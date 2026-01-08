@@ -1,7 +1,6 @@
 package com.mwatson.passwordvault.storage;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mwatson.passwordvault.crypto.EncryptionService;
 import com.mwatson.passwordvault.model.Vault;
@@ -18,10 +17,6 @@ import java.util.Base64;
  */
 public class VaultStorage {
   private static final String VAULT_FILE_NAME = "password-vault.dat";
-
-
-  private static final Gson GSON = new GsonBuilder().create();
-
 
   private final EncryptionService encryptionService;
   private final Path vaultFilePath;

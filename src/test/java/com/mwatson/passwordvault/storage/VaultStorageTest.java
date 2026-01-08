@@ -2,23 +2,16 @@ package com.mwatson.passwordvault.storage;
 
 import com.mwatson.passwordvault.model.PasswordEntry;
 import com.mwatson.passwordvault.model.Vault;
-import com.mwatson.passwordvault.crypto.EncryptionService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.security.SecureRandom;
 
 
 public class VaultStorageTest {
@@ -63,11 +56,9 @@ public class VaultStorageTest {
       JsonObject json = gson.fromJson(fileContent, JsonObject.class);
       assertTrue(json.has("saltBase64"));
       assertTrue(json.has("encryptedDataBase64"));
-      String savedSaltBase64 = json.get("saltBase64").getAsString();
       String savedEncryptedBase64 = json.get("encryptedDataBase64").getAsString();
 
       // Decode the salt and the encrypted data
-      byte[] savedSalt = Base64.getDecoder().decode(savedSaltBase64);
       byte[] savedEncrypted = Base64.getDecoder().decode(savedEncryptedBase64);
 
       // Check if encrypted data contains IV, 12 bytes long

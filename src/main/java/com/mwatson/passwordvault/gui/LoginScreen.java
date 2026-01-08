@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.io.File;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -23,10 +22,11 @@ import javax.swing.UIManager;
 /**
  * Login screen for the Password Vault application.
  *
- * This screen allows the user to unlock an existing vault
+ * <p>This screen allows the user to unlock an existing vault
  * or create a new vault using a master password.
  */
 public class LoginScreen extends JFrame {
+  private static final long serialVersionUID = 1L;
   private final VaultStorage storage;
   private JPasswordField passwordField;
 
@@ -191,6 +191,11 @@ public class LoginScreen extends JFrame {
     dispose();
   }
 
+  /**
+   * Application entry point.
+   *
+   * @param args command line not used
+   */
   public static void main(String[] args) {
     // Use SwingUtilities to ensure thread safety
     SwingUtilities.invokeLater(() -> {
