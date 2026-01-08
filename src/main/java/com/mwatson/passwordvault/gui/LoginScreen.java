@@ -42,7 +42,7 @@ public class LoginScreen extends JFrame {
   private void setUpUi() {
     // Title and basic frame configuration
     setTitle("Password Vault - Login");
-    setSize(400, 250);
+    setSize(400, 500);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     // Centre the window on the screen
@@ -65,11 +65,8 @@ public class LoginScreen extends JFrame {
     passwordPanel.add(passwordField);
 
     // Centre form panel holding password field, buttons and status text
-    JPanel formPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+    JPanel formPanel = new JPanel(new GridLayout(0, 1, 10, 10));
     formPanel.add(passwordPanel);
-
-    // Panel containing action buttons
-    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
     // Button used to unlock an existing vault
     JButton unlockButton = new JButton("Unlock Vault");
@@ -79,8 +76,18 @@ public class LoginScreen extends JFrame {
     JButton createButton = new JButton("Create New Vault");
     createButton.addActionListener(e -> createNewVault());
 
+    // Button used to delete a vault
+    JButton deleteButton = new JButton("Delete Vault");
+    deleteButton.addActionListener(e -> deleteVault());
+
+    // Panel containing action buttons
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+
     buttonPanel.add(unlockButton);
     buttonPanel.add(createButton);
+    buttonPanel.add(deleteButton);
+
     formPanel.add(buttonPanel);
 
     // Label for displaying status or error messages
@@ -207,5 +214,24 @@ public class LoginScreen extends JFrame {
 
       new LoginScreen();
     });
+  }
+
+  private void deleteVault() {
+    int confirm = JOptionPane.showConfirmDialog(this,
+        "Delete this vault file? All passwords will be lost permanently.", "Delete Vault",
+        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+      try {
+        storage.deleteVaultFile();
+        JOptionPane.showMessageDialog(this, "Vault deleted. Returning to login.", "Success",
+            JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+        new LoginScreen();
+      } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Failed to delete vault: " + e.getMessage(), "Error",
+            JOptionPane.ERROR_MESSAGE);
+      }
+    }
   }
 }
