@@ -87,6 +87,7 @@ public class VaultStorageTest {
 
         assertEquals(originalEntry.getUsername(), loadedEntry.getUsername());
         assertEquals(originalEntry.getUrl(), loadedEntry.getUrl());
+        assertArrayEquals(originalEntry.getPassword(), loadedEntry.getPassword());
       }
     } finally {
       // Delete test file

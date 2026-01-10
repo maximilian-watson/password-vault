@@ -12,7 +12,7 @@ public class PasswordEntry {
   private String id;
   private String title;
   private String username;
-  private transient char[] password;
+  private char[] password;
   private String url;
   private String notes;
   private String category;
