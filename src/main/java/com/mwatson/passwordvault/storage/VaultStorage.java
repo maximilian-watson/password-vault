@@ -48,6 +48,7 @@ public class VaultStorage {
    * @throws IOException if there is an error, not handled in this function, caller must handle
    */
   public void saveVault(Vault vault, char[] masterPassword) throws IOException {
+    System.out.println("Vault file: " + vaultFilePath);
     if (vault == null || masterPassword == null) {
       throw new IllegalArgumentException("Vault and Password cannot be null");
     }
@@ -67,7 +68,7 @@ public class VaultStorage {
           saltBase64, encryptedBase64);
       Files.write(vaultFilePath, jsonContent.getBytes(StandardCharsets.UTF_8));
     } finally {
-      encryptionService.clearPassword(masterPassword);
+      // encryptionService.clearPassword(masterPassword);
     }
   }
 
@@ -112,7 +113,7 @@ public class VaultStorage {
     } catch (Exception e) {
       throw new IOException("Failed to load vault: " + e.getMessage(), e);
     } finally {
-      encryptionService.clearPassword(masterPassword);
+      // encryptionService.clearPassword(masterPassword);
     }
   }
 

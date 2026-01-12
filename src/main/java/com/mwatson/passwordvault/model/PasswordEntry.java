@@ -212,7 +212,8 @@ public class PasswordEntry {
     return (title != null && title.toLowerCase().contains(searchLower))
         || (username != null && username.toLowerCase().contains(searchLower))
         || (url != null && url.toLowerCase().contains(searchLower))
-        || (notes != null && notes.toLowerCase().contains(searchLower));
+        || (notes != null && notes.toLowerCase().contains(searchLower))
+        || (category != null && category.toLowerCase().contains(searchLower));
   }
 
 

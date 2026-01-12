@@ -27,7 +27,7 @@ import javax.swing.UIManager;
  */
 public class LoginScreen extends JFrame {
   private static final long serialVersionUID = 1L;
-  private final VaultStorage storage;
+  private VaultStorage storage;
   private JPasswordField passwordField;
 
   /**
@@ -120,6 +120,7 @@ public class LoginScreen extends JFrame {
       // Attempt to load the vault using the provided password
       Vault vault = storage.loadVault(password);
 
+
       // If no vault is found, prompt to create a new vault
       if (vault == null) {
         // No vault exists
@@ -128,6 +129,7 @@ public class LoginScreen extends JFrame {
 
         if (choice == JOptionPane.YES_OPTION) {
           createNewVaultWithPassword(password);
+
         }
         return;
       }
@@ -162,15 +164,19 @@ public class LoginScreen extends JFrame {
       // Create a new empty vault
       Vault newVault = new Vault();
 
-      // Save the vault to disk, encrypted with the master password
-      storage.saveVault(newVault, password);
+
+      // Clean this up
+      char[] passwordTemp = password;
 
       // Tell the user that the vault was created successfully
       JOptionPane.showMessageDialog(this, "New vault created successfully!", "Success",
           JOptionPane.INFORMATION_MESSAGE);
 
+      System.out.println(Arrays.toString(newVault.getSalt()));
+
+
       // Open main application window
-      openMainWindow(newVault, password);
+      openMainWindow(newVault, passwordTemp);
 
     } catch (Exception e) {
       // Show an error if vault creation or saving fails
@@ -180,21 +186,12 @@ public class LoginScreen extends JFrame {
   }
 
   private void openMainWindow(Vault vault, char[] password) {
-    // TODO: Create and show main window
-    // Temporary console output for debugging
-    System.out.println("Vault unlocked! Name: " + vault.getName());
-    System.out.println("Entries: " + vault.getEntryCount());
+    // Open main window
+    SwingUtilities.invokeLater(() -> {
+      new MainWindow(vault, storage, password);
+    });
 
-    // For now, shows simple success message to user
-    JOptionPane.showMessageDialog(this, "Vault unlocked successfully!\n" + "Name: "
-        + vault.getName() + "\n" + "Entries: " + vault.getEntryCount(), "Success",
-        JOptionPane.INFORMATION_MESSAGE);
-
-    // Clear password from memory
-    Arrays.fill(password, '\0');
-
-    // TODO: Remove this later - just for testing
-    // Close the login window, main window will replace later
+    // Close the login window
     dispose();
   }
 
@@ -204,6 +201,8 @@ public class LoginScreen extends JFrame {
    * @param args command line not used
    */
   public static void main(String[] args) {
+    System.out.println("MAIN STARTED");
+
     // Use SwingUtilities to ensure thread safety
     SwingUtilities.invokeLater(() -> {
       try {
@@ -234,4 +233,7 @@ public class LoginScreen extends JFrame {
       }
     }
   }
+
+  
+
 }

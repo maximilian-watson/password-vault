@@ -51,6 +51,7 @@ public class EncryptionService {
       throw new IllegalArgumentException("Data, password, salt can't be null");
     }
 
+    
     try {
       SecretKey secretKey = deriveKey(password, salt);
       byte[] iv = new byte[GCM_IV_LENGTH];
@@ -61,11 +62,16 @@ public class EncryptionService {
       cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
 
       byte[] encryptedData = cipher.doFinal(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      System.out.println("Encrypted total length: " + encryptedData.length);
+      System.out.println("Expected IV length: " + GCM_IV_LENGTH);
+      System.out
+          .println("Encrypted payload length: " + (encryptedData.length - GCM_IV_LENGTH));
       return ByteBuffer.allocate(iv.length + encryptedData.length).put(iv).put(encryptedData)
           .array();
     } catch (Exception e) {
       throw new EncryptionException("Failed to encrypt data", e);
     }
+
   }
 
   /**
@@ -85,6 +91,9 @@ public class EncryptionService {
       throw new IllegalArgumentException("Encrypted data is too short to contain IV");
     }
     
+    System.out.println("Encrypted total length: " + encryptedDataWithIv.length);
+    System.out.println("Expected IV length: " + GCM_IV_LENGTH);
+    System.out.println("Encrypted payload length: " + (encryptedDataWithIv.length - GCM_IV_LENGTH));
     try {
       ByteBuffer buffer = ByteBuffer.wrap(encryptedDataWithIv);
       byte[] iv = new byte[GCM_IV_LENGTH];
