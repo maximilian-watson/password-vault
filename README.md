@@ -58,10 +58,11 @@ A desktop password vault application written in Java using Swing for the user in
 - Checkstyle for consistent code formatting and style
 - SpotBugs for static code analysis
 - JaCoCo for test coverage reporting
-- GitHub Actions for basic CIi
+- GitHub Actions for basic CLI
 
 ## This project demonstrates
 
+- Good testing, 97% coverage
 - Building a desktop GUI using Swing, with mutliple windows
 - Designing modal dialogs with form validation
 - Applying real cryptographic conecepts (AES-GCM, salts, key derivation)
@@ -117,7 +118,3 @@ This project intentially avoids Java's built in object serialisation for storing
 Vault data is manually serialised to JSON and encrypted before being saved to disk, giving full control over storage format.
 
 Using JSON and encryption gave me more control over the format and security.
-
-```
-
-```

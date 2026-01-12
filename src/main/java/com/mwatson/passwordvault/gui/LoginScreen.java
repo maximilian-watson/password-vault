@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,8 +21,8 @@ import javax.swing.UIManager;
 /**
  * Login screen for the Password Vault application.
  *
- * <p>This screen allows the user to unlock an existing vault
- * or create a new vault using a master password.
+ * <p>This screen allows the user to unlock an existing vault or create a new vault using a master
+ * password.
  */
 public class LoginScreen extends JFrame {
   private static final long serialVersionUID = 1L;
@@ -83,7 +82,6 @@ public class LoginScreen extends JFrame {
     // Panel containing action buttons
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-
     buttonPanel.add(unlockButton);
     buttonPanel.add(createButton);
     buttonPanel.add(deleteButton);
@@ -119,7 +117,6 @@ public class LoginScreen extends JFrame {
     try {
       // Attempt to load the vault using the provided password
       Vault vault = storage.loadVault(password);
-
 
       // If no vault is found, prompt to create a new vault
       if (vault == null) {
@@ -164,16 +161,12 @@ public class LoginScreen extends JFrame {
       // Create a new empty vault
       Vault newVault = new Vault();
 
-
       // Clean this up
       char[] passwordTemp = password;
 
       // Tell the user that the vault was created successfully
       JOptionPane.showMessageDialog(this, "New vault created successfully!", "Success",
           JOptionPane.INFORMATION_MESSAGE);
-
-      System.out.println(Arrays.toString(newVault.getSalt()));
-
 
       // Open main application window
       openMainWindow(newVault, passwordTemp);
@@ -201,8 +194,6 @@ public class LoginScreen extends JFrame {
    * @param args command line not used
    */
   public static void main(String[] args) {
-    System.out.println("MAIN STARTED");
-
     // Use SwingUtilities to ensure thread safety
     SwingUtilities.invokeLater(() -> {
       try {
@@ -233,7 +224,5 @@ public class LoginScreen extends JFrame {
       }
     }
   }
-
-  
 
 }

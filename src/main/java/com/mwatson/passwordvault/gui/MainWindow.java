@@ -37,7 +37,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-
 /**
  * Main application window that opens when vault is unlocked.
  */
@@ -94,7 +93,8 @@ public class MainWindow extends JFrame {
   }
 
   /**
-   * Left side shows vault name and number of entries, Right side has the search box.
+   * Left side shows vault name and number of entries, Right side has the search
+   * box.
    *
    * @return the header
    */
@@ -238,7 +238,7 @@ public class MainWindow extends JFrame {
   // Controls what data appears in the table
   class PasswordTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
-    private final String[] columnNames = {"Website", "Username", "Category", "Password", "Notes"};
+    private final String[] columnNames = { "Website", "Username", "Category", "Password", "Notes" };
     private List<PasswordEntry> entries;
 
     public PasswordTableModel() {
@@ -297,7 +297,8 @@ public class MainWindow extends JFrame {
   }
 
   /**
-   * Custom renderer for password column, always shows same number of dots instead of the real
+   * Custom renderer for password column, always shows same number of dots instead
+   * of the real
    * password.
    */
   class PasswordCellRenderer extends DefaultTableCellRenderer {
@@ -317,7 +318,8 @@ public class MainWindow extends JFrame {
   }
 
   /**
-   * Loads all entries from the vault, refreshes the table, updates the window title.
+   * Loads all entries from the vault, refreshes the table, updates the window
+   * title.
    */
   private void loadPasswordEntries() {
     tableModel.updateEntries(vault.getAllEntries());
@@ -341,7 +343,7 @@ public class MainWindow extends JFrame {
   private void addNewEntry() {
     EntryDialog dialog = new EntryDialog(this, "Add New Password Entry", null);
     dialog.setVisible(true);
-    
+
     if (dialog.isSaved()) {
       PasswordEntry newEntry = dialog.getPasswordEntry();
       vault.addEntry(newEntry);
@@ -379,7 +381,6 @@ public class MainWindow extends JFrame {
           "Success", JOptionPane.INFORMATION_MESSAGE);
     }
   }
-
 
   /**
    * Confirms deletion, removes entry from vault, refreshes table.
@@ -423,8 +424,7 @@ public class MainWindow extends JFrame {
           "Save vault to disk?",
           "Save Vault",
           JOptionPane.YES_NO_OPTION,
-          JOptionPane.QUESTION_MESSAGE
-      );
+          JOptionPane.QUESTION_MESSAGE);
 
       if (confirm == JOptionPane.YES_OPTION) {
         vaultStorage.saveVault(vault, masterPassword);
@@ -532,7 +532,6 @@ public class MainWindow extends JFrame {
       passwordField = new JPasswordField(20);
       passwordPanel.add(passwordField, BorderLayout.CENTER);
 
-      
       formPanel.add(passwordPanel, gbc);
 
       // Category
@@ -647,8 +646,7 @@ public class MainWindow extends JFrame {
         // Create new entry
         entry = new PasswordEntry(urlField.getText().trim(),
             usernameField.getText().trim(), passwordField.getPassword(), urlField.getText().trim(),
-            notesArea.getText().trim(), categoryField.getText().trim()
-        );
+            notesArea.getText().trim(), categoryField.getText().trim());
       } else {
         // Update existing entry
         entry.setUrl(urlField.getText().trim());
