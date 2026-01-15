@@ -69,6 +69,7 @@ public class VaultStorage {
       Files.write(vaultFilePath, jsonContent.getBytes(StandardCharsets.UTF_8));
     } finally {
       // encryptionService.clearPassword(masterPassword);
+      System.out.println("Saving vault to: " + vaultFilePath.toAbsolutePath());
     }
   }
 
