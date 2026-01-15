@@ -73,6 +73,15 @@ A desktop password vault application written in Java using Swing for the user in
 
 # How to use
 
+Clone the repository
+```bash
+git clone https://github.com/maximilian-watson/password-vault.git
+```
+Move directory
+```bash
+cd password-vault
+```
+Build
 ```bash
 mvn clean package
 ```
