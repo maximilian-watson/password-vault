@@ -73,18 +73,12 @@ A desktop password vault application written in Java using Swing for the user in
 
 # How to use
 
-1. Run the main method in LoginScreen.
-1. Build and run the application
-   #### Using Maven (recommended)
-
 ```bash
 mvn clean package
 ```
-
-then run
-
+Run the application
 ```bash
-java -cp target/password-vault.jar com.mwatson.passwordvault.gui.LoginScreen
+java -jar target/password-vault-1.0-SNAPSHOT.jar
 ```
 
 1. Directly run from an IDE
