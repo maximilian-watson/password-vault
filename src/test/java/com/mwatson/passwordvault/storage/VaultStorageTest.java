@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -96,15 +98,18 @@ public class VaultStorageTest {
   }
   
   @Test
-  public void testEmptyConstructor() {
+  public void testEmptyConstructor() throws Exception {
     // Test 2
     // Testing the VaultStorage empty constructor, test the path used is right
     VaultStorage storage = new VaultStorage();
     assertNotNull(storage);
-    String expectedPath = System.getProperty("user.home") + "/password-vault.dat";
-    assertEquals(expectedPath, storage.getVaultFilePath());
+    Path expectedPath =
+        Paths.get(System.getProperty("user.home"), "password-vault.dat");
+
+    assertEquals(expectedPath, Paths.get(storage.getVaultFilePath()));
+
     // Delete file
-    new File(expectedPath).delete();
+    Files.deleteIfExists(expectedPath);
   }
 
   @Test
